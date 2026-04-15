@@ -1,11 +1,11 @@
 import levels from './levels/index.js'
-import { loadProgress, setCurrentLevel, markCompleted } from './progress.js'
-import { executeLevel } from './engine.js'
+import { loadProgress, setCurrentLevel } from './progress.js'
+import { evaluateMissions, renderPreview } from './engine.js'
 import { createEditor, setEditorContent, setPreCode, getEditableContent, focusEditor } from './editor.js'
-import { showBelt, showSuccess } from './belt.js'
-import { initUI, renderLevel, showFeedback, showLevelSuccess, updateLevelSelector } from './ui.js'
+import { initUI, renderLevel, showFeedback, updateMissionStatus } from './ui.js'
 
 let currentLevel = null
+const previewFrame = document.getElementById('preview-frame')
 
 function navigateToLevel(id) {
   const level = levels.find((l) => l.id === id)
@@ -14,36 +14,24 @@ function navigateToLevel(id) {
   currentLevel = level
   setCurrentLevel(id)
   renderLevel(level)
-  showBelt(level)
   setPreCode(level.preCode, level.preCode2)
   setEditorContent(level.initialCode || '', level.lockedPrefix || '')
+  const markup = getEditableContent()
+  renderPreview(previewFrame, markup)
+  updateMissionStatus(level, evaluateMissions(level, markup))
   focusEditor()
 }
 
 function runCode() {
   if (!currentLevel) return
 
-  const userCode = getEditableContent().trim()
-  if (!userCode) {
-    showFeedback('Type some code first!', 'error')
-    return
-  }
+  const markup = getEditableContent()
+  renderPreview(previewFrame, markup)
+  updateMissionStatus(currentLevel, evaluateMissions(currentLevel, markup))
+  showFeedback('Vista previa actualizada.', 'info')
 
-  const result = executeLevel(currentLevel, userCode)
-
-  if (result.success) {
-    showFeedback('Congrats! You did it!', 'success')
-    showSuccess(currentLevel)
-    showLevelSuccess(currentLevel)
-    const progress = markCompleted(currentLevel.id, userCode)
-    updateLevelSelector()
-
-    // On mobile, scroll down to the sushi area so the visual result is front and center
-    if (window.innerWidth <= 1200) {
-      document.querySelector('.sushi-area').scrollIntoView({ behavior: 'smooth', block: 'end' })
-    }
-  } else {
-    showFeedback(result.error || 'Not quite — try again!', 'error')
+  if (window.innerWidth <= 1200) {
+    document.querySelector('.preview-area').scrollIntoView({ behavior: 'smooth', block: 'end' })
   }
 }
 
@@ -56,7 +44,8 @@ function init() {
   initUI(navigateToLevel)
 
   const progress = loadProgress()
-  navigateToLevel(progress.currentLevel || 1)
+  const startLevel = levels.some((level) => level.id === progress.currentLevel) ? progress.currentLevel : 1
+  navigateToLevel(startLevel)
 }
 
 init()

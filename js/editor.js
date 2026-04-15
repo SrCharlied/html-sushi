@@ -1,10 +1,10 @@
 let editorRoot = null
 let inputEl = null
-let prefixEl = null
+let gutterEl = null
 let onRunCallback = null
-let currentPrefix = ''
+let readOnlyLineCount = 0
 
-const MIN_LINES = 10
+const MIN_LINES = 12
 
 export function createEditor(container, onRun) {
   onRunCallback = onRun
@@ -23,89 +23,90 @@ export function setPreCode(preCode, preCode2) {
   if (!editorRoot) return
 
   editorRoot.innerHTML = ''
+  readOnlyLineCount = 0
 
   const codes = [preCode, preCode2].filter(Boolean)
   let lineNum = 1
 
   for (const text of codes) {
-    const line = document.createElement('div')
-    line.className = 'editor-line readonly'
+    const blockLines = String(text).split('\n')
 
-    const num = document.createElement('span')
-    num.className = 'line-num'
-    num.textContent = lineNum
+    for (const blockLine of blockLines) {
+      const line = document.createElement('div')
+      line.className = 'editor-line readonly'
 
-    const code = document.createElement('span')
-    code.className = 'line-text'
-    code.textContent = text
+      const num = document.createElement('span')
+      num.className = 'line-num'
+      num.textContent = lineNum
 
-    line.appendChild(num)
-    line.appendChild(code)
-    editorRoot.appendChild(line)
-    lineNum++
+      const code = document.createElement('span')
+      code.className = 'line-text'
+      code.textContent = blockLine || ' '
+
+      line.appendChild(num)
+      line.appendChild(code)
+      editorRoot.appendChild(line)
+
+      lineNum++
+      readOnlyLineCount++
+    }
   }
 
-  // Editable line
-  const editLine = document.createElement('div')
-  editLine.className = 'editor-line editable'
+  const editBlock = document.createElement('div')
+  editBlock.className = 'editor-edit-block'
 
-  const num = document.createElement('span')
-  num.className = 'line-num'
-  num.textContent = lineNum
+  gutterEl = document.createElement('div')
+  gutterEl.className = 'editor-edit-gutter'
 
-  prefixEl = document.createElement('span')
-  prefixEl.className = 'locked-prefix'
-
-  inputEl = document.createElement('input')
-  inputEl.type = 'text'
+  inputEl = document.createElement('textarea')
   inputEl.className = 'code-input'
   inputEl.spellcheck = false
   inputEl.autocomplete = 'off'
+  inputEl.wrap = 'off'
 
   inputEl.addEventListener('keydown', (e) => {
     if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
       e.preventDefault()
       if (onRunCallback) onRunCallback()
-    } else if (e.key === 'Enter') {
+      return
+    }
+
+    if (e.key === 'Tab') {
       e.preventDefault()
-      if (onRunCallback) onRunCallback()
-    } else if (e.key === 'Escape') {
+      insertAtSelection('  ')
+      return
+    }
+
+    if (e.key === 'Escape') {
       inputEl.blur()
     }
   })
 
-  editLine.appendChild(num)
-  editLine.appendChild(prefixEl)
-  editLine.appendChild(inputEl)
-  editorRoot.appendChild(editLine)
-  lineNum++
+  inputEl.addEventListener('input', updateLineNumbers)
+  inputEl.addEventListener('scroll', () => {
+    if (gutterEl) {
+      gutterEl.scrollTop = inputEl.scrollTop
+    }
+  })
 
-  // Pad to MIN_LINES
-  while (lineNum <= MIN_LINES) {
-    const empty = document.createElement('div')
-    empty.className = 'editor-line empty'
+  editBlock.appendChild(gutterEl)
+  editBlock.appendChild(inputEl)
+  editorRoot.appendChild(editBlock)
 
-    const emptyNum = document.createElement('span')
-    emptyNum.className = 'line-num'
-    emptyNum.textContent = lineNum
-
-    empty.appendChild(emptyNum)
-    empty.innerHTML += '&nbsp;'
-    editorRoot.appendChild(empty)
-    lineNum++
-  }
+  updateLineNumbers()
 }
 
 export function setEditorContent(code, prefix = '') {
   if (!inputEl) return
-  currentPrefix = prefix
-  prefixEl.textContent = prefix
-  inputEl.value = code
+
+  const text = String(code || '')
+  inputEl.value = prefix && !text.startsWith(prefix) ? `${prefix}${text}` : text
+  updateLineNumbers()
 }
 
 export function getEditorContent() {
   if (!inputEl) return ''
-  return currentPrefix + inputEl.value
+  return inputEl.value
 }
 
 export function getEditableContent() {
@@ -115,4 +116,27 @@ export function getEditableContent() {
 
 export function focusEditor() {
   if (inputEl) inputEl.focus()
+}
+
+function updateLineNumbers() {
+  if (!gutterEl || !inputEl) return
+
+  const editableLines = Math.max(MIN_LINES - readOnlyLineCount, inputEl.value.split('\n').length)
+
+  gutterEl.innerHTML = Array.from({ length: editableLines }, (_, index) => {
+    return `<div class="line-num">${readOnlyLineCount + index + 1}</div>`
+  }).join('')
+}
+
+function insertAtSelection(text) {
+  if (!inputEl) return
+
+  const { selectionStart, selectionEnd, value } = inputEl
+  inputEl.value = value.slice(0, selectionStart) + text + value.slice(selectionEnd)
+
+  const nextCaret = selectionStart + text.length
+  inputEl.selectionStart = nextCaret
+  inputEl.selectionEnd = nextCaret
+
+  updateLineNumbers()
 }

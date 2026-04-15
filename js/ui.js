@@ -8,6 +8,10 @@ const hintBtn = document.getElementById('hint-btn')
 const hintModal = document.getElementById('hint-modal')
 const hintModalOverlay = document.getElementById('hint-modal-overlay')
 const levelHint = document.getElementById('level-hint')
+const missionsBtn = document.getElementById('missions-btn')
+const missionsModal = document.getElementById('missions-modal')
+const missionsModalOverlay = document.getElementById('missions-modal-overlay')
+const missionsList = document.getElementById('missions-list')
 const prevBtn = document.getElementById('prev-btn')
 const nextBtn = document.getElementById('next-btn')
 const currentLevelEl = document.getElementById('current-level')
@@ -60,6 +64,18 @@ export function initUI(navigateCallback) {
 
   hintModalOverlay.addEventListener('click', closeHint)
 
+  missionsBtn.addEventListener('click', () => {
+    const isOpen = !missionsModal.classList.contains('hidden')
+    if (isOpen) {
+      closeMissions()
+    } else {
+      missionsModal.classList.remove('hidden')
+      missionsModalOverlay.classList.remove('hidden')
+    }
+  })
+
+  missionsModalOverlay.addEventListener('click', closeMissions)
+
   buildLevelSelector()
 }
 
@@ -71,6 +87,11 @@ function closeModal() {
 function closeHint() {
   hintModal.classList.add('hidden')
   hintModalOverlay.classList.add('hidden')
+}
+
+function closeMissions() {
+  missionsModal.classList.add('hidden')
+  missionsModalOverlay.classList.add('hidden')
 }
 
 function getCurrentIndex() {
@@ -107,6 +128,7 @@ export function renderLevel(level) {
   levelDesc.innerHTML = level.description
   levelHint.textContent = level.hint || ''
   closeHint()
+  closeMissions()
   currentLevelEl.textContent = level.id
 
   // Remove success styling from instructions
@@ -114,8 +136,10 @@ export function renderLevel(level) {
 
   // Restore hint button
   hintBtn.classList.remove('next-lesson-btn')
-  hintBtn.innerHTML = '<img class="hint-icon" src="svg/light.svg" alt=""><span>Show Hint</span>'
+  hintBtn.innerHTML = '<img class="hint-icon" src="svg/light.svg" alt=""><span>Ver pista</span>'
   hintBtn.onclick = null
+
+  renderMissions(level, [])
 
   const idx = levels.findIndex((l) => l.id === level.id)
   prevBtn.disabled = idx === 0
@@ -171,6 +195,40 @@ export function updateLevelSelector() {
     dot.classList.toggle('completed', progress.completedLevels.includes(level.id))
     dot.classList.toggle('active', level.id === currentLevelId)
   })
+}
+
+export function updateMissionStatus(level, states) {
+  renderMissions(level, states)
+}
+
+function renderMissions(level, states) {
+  const missions = Array.isArray(level.missions) ? level.missions : []
+  const missionStates = Array.isArray(states) ? states : []
+
+  if (missions.length === 0) {
+    missionsBtn.classList.add('hidden')
+    missionsList.innerHTML = ''
+    return
+  }
+
+  const completedCount = missionStates.filter(Boolean).length
+  missionsBtn.classList.remove('hidden')
+  missionsBtn.innerHTML = `<span>Misiones ${completedCount}/${missions.length}</span>`
+  missionsList.innerHTML = `
+    <h3 class="missions-title">Misiones</h3>
+    <ol class="missions-list">
+      ${missions.map((mission, index) => {
+        const done = Boolean(missionStates[index])
+        const text = typeof mission === 'string' ? mission : mission.text
+        return `
+          <li class="${done ? 'mission-done' : 'mission-pending'}">
+            <span class="mission-status">${done ? 'Hecha' : 'Pendiente'}</span>
+            <span>${text}</span>
+          </li>
+        `
+      }).join('')}
+    </ol>
+  `
 }
 
 let toastTimer = null

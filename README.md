@@ -1,38 +1,89 @@
-# JS Sushi — Learn JavaScript Arrays
+# HTML Sushi
 
-JS Sushi is an interactive browser game that teaches JavaScript array methods through a sushi belt metaphor. You write real JavaScript to manipulate a visual conveyor belt of sushi, building intuition for how arrays work — one piece at a time.
+HTML Sushi is a small browser game for practicing basic HTML through a sushi-themed interface. Students edit real HTML, preview it live, and explore three beginner lessons:
 
-## The Idea
-
-A sushi conveyor belt is basically an array you can see. Items sit in order, you can add to the front or back, remove from either end, rearrange, filter, and transform — just like a JavaScript array. JS Sushi makes that connection literal: every array operation you write plays out visually on the belt.
-
-## What You'll Learn
-
-The game is split into 7 chapters across 40 levels, progressing from absolute basics to more advanced patterns:
-
-### 1. The Empty Belt
-Start from nothing. Create your first array, access items by index, and learn how arrays hold ordered data.
-
-### 2. Adding & Removing
-Learn `push`, `pop`, `unshift`, `shift`, `splice`, and `slice` — the core toolkit for modifying arrays. Add sushi to the belt, remove pieces, extract sections, and rearrange orders.
-
-### 3. Searching the Belt
-Find what you're looking for. Use `includes`, `indexOf`, `find`, `findIndex`, and `every` to search through the belt and answer questions about its contents.
-
-### 4. Transforming the Belt
-This is where it gets powerful. Use `filter` to keep only certain items, `map` to transform every piece, and `reduce` to combine everything into a single result. You'll also work with arrays of objects — sushi with names, prices, and categories.
-
-### 5. Sorting & Rearranging
-Put the belt in order using `sort` with custom comparison functions.
-
-### 6. Spread & Copying
-Discover why `const copy = original` doesn't actually copy an array, and learn how the spread operator (`...`) lets you safely duplicate and combine arrays without unexpected side effects.
-
-### 7. Destructuring
-Pull values out of arrays (and objects) cleanly using destructuring — pick specific items, gather the rest, skip elements, and combine everything you've learned in a final challenge.
+- Basic HTML5 tags
+- Advanced tags
+- HTML5 forms
 
 ## How It Works
 
-Each level gives you a description of what to do and an editor where you write one line of JavaScript. When you run your code, the sushi belt animates to show the result. Get it right and the belt updates to reflect your solution — get it wrong and you can try again. Hints are available if you get stuck, but they point you in the right direction without giving away the answer.
+Each lesson includes:
 
-There are no semicolons, no boilerplate, no setup. Just arrays and sushi.
+- A short explanation
+- A hint
+- Optional missions
+- A multiline HTML editor
+- A live preview rendered inside a sandboxed iframe
+
+The goal is to let beginners change code and immediately see what happens.
+
+## Current Lessons
+
+### 1. Basic HTML5 Tags
+
+Focuses on:
+
+- Basic tags like `h1`, `p`, and `div`
+- Text formatting
+- Images
+- Audio
+- Video
+- Colors with inline styles
+
+### 2. Advanced Tags
+
+Focuses on:
+
+- Lists
+- Tables
+- Page layout tags
+- Folder paths
+- Links
+
+### 3. HTML5 Forms
+
+Focuses on:
+
+- Forms
+- Labels
+- Text inputs
+- Select fields
+- Checkboxes and radio buttons
+- Buttons
+- Basic form submission attributes
+
+## Project Structure
+
+```text
+index.html
+js/
+  main.js
+  engine.js
+  editor.js
+  ui.js
+  progress.js
+  levels/
+    index.js
+css/
+  style.css
+  bento.css
+  instructions.css
+  editor-area.css
+  title.css
+  variables.css
+  wood-grain.css
+svg/
+  mascot.svg
+  light.svg
+  paper.svg
+  plates/
+  sushi/
+```
+
+## Notes
+
+- No build step is required
+- The app uses ES modules directly in the browser
+- The live preview uses `iframe.srcdoc` with `sandbox`
+- Student progress is stored in `localStorage`

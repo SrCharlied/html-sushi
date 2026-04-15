@@ -1,4 +1,4 @@
-const STORAGE_KEY = 'jsSushi_progress'
+const STORAGE_KEY = 'htmlSushi_progress'
 
 const defaultProgress = {
   completedLevels: [],

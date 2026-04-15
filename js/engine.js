@@ -1,111 +1,112 @@
-const BLOCKED_PATTERNS = [
-  /;/,
-  /alert\s*\(/,
-  /confirm\s*\(/,
-  /prompt\s*\(/,
-  /eval\s*\(/,
-  /document\./,
-  /window\./,
-  /\bwhile\b/,
-  /\bfor\b/,
-  /fetch\s*\(/,
-  /XMLHttpRequest/,
-  /\bimport\b/,
-  /\brequire\b/,
-]
+const SCRIPT_TAG_RE = /<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi
+const BASE_TAG_RE = /<base\b[^>]*>/gi
 
-const BLOCKED_MESSAGES = {
-  ';': 'No semicolons needed! This game uses single expressions.',
-  while: 'No loops needed — use array methods instead!',
-  for: 'No loops needed — use array methods instead!',
-  eval: 'eval() is not allowed.',
-  'document.': 'DOM access is not allowed in this sandbox.',
-  'window.': 'Window access is not allowed in this sandbox.',
+function sanitizeMarkup(markup) {
+  return String(markup || '')
+    .replace(SCRIPT_TAG_RE, '')
+    .replace(BASE_TAG_RE, '')
 }
 
-export function sanitize(code) {
-  for (const pattern of BLOCKED_PATTERNS) {
-    if (pattern.test(code)) {
-      const match = pattern.source.replace(/\\[sb()+*?]/g, '').replace(/\\/g, '')
-      const message = BLOCKED_MESSAGES[match] || `"${match}" is not allowed here.`
-      return { ok: false, message }
-    }
-  }
-  return { ok: true }
+function buildEmptyState() {
+  return `
+    <section class="preview-empty">
+      <h1>Vista previa HTML</h1>
+      <p>Escribe algo en el editor y luego pulsa Preview.</p>
+      <p>Tambien puedes usar Ctrl+Enter o Cmd+Enter.</p>
+    </section>
+  `
 }
 
-export function executeLevel(level, userCode) {
-  const check = sanitize(userCode)
-  if (!check.ok) {
-    return { success: false, error: check.message }
-  }
+function buildPreviewShell(content) {
+  return `
+    <!DOCTYPE html>
+    <html lang="es">
+      <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <style>
+          :root {
+            color-scheme: light;
+            font-family: Arial, sans-serif;
+          }
 
-  const editorCode = (level.lockedPrefix || '') + userCode
-  const fullCode = [level.preCode, level.preCode2, editorCode, level.postCode].filter(Boolean).join('\n')
+          * {
+            box-sizing: border-box;
+          }
 
-  try {
-    const wrapped = `
-      ${fullCode}
-      return { ${extractVarNames(level, editorCode).join(', ')} }
-    `
-    const fn = new Function(wrapped)
-    const context = fn.call(Object.create(null))
+          body {
+            margin: 0;
+            padding: 24px;
+            min-height: 100vh;
+            background: #fffdf8;
+            color: #1f2937;
+          }
 
-    const passed = level.validate(userCode, context)
-    return {
-      success: passed,
-      context,
-      error: passed ? null : 'Not quite! Try again.',
-    }
-  } catch (err) {
-    return { success: false, error: err.message }
-  }
+          .preview-empty {
+            min-height: calc(100vh - 48px);
+            display: grid;
+            place-content: center;
+            gap: 12px;
+            text-align: center;
+            border: 2px dashed #d6c7a5;
+            border-radius: 18px;
+            background: linear-gradient(180deg, #fffef7 0%, #fff5d9 100%);
+            padding: 32px;
+          }
+
+          .preview-empty h1,
+          .preview-empty p {
+            margin: 0;
+          }
+
+          .preview-empty h1 {
+            font-size: 1.4rem;
+          }
+        </style>
+      </head>
+      <body>${content}</body>
+    </html>
+  `
 }
 
-function extractVarNames(level, userCode) {
-  const allCode = [level.preCode, level.preCode2, userCode, level.postCode].filter(Boolean).join('\n')
-  const names = new Set()
+export function buildPreviewDocument(markup) {
+  const safeMarkup = sanitizeMarkup(markup)
+  const trimmedMarkup = safeMarkup.trim()
+  const hasFullDocument = /<!doctype|<html[\s>]|<head[\s>]|<body[\s>]/i.test(trimmedMarkup)
 
-  const constLetVar = /(?:const|let|var)\s+(?:\[([^\]]+)\]|\{([^}]+)\}|(\w+))/g
-  let match
-  while ((match = constLetVar.exec(allCode)) !== null) {
-    if (match[1]) {
-      // array destructuring: const [a, b, ...rest] = ...
-      match[1].split(',').forEach((part) => {
-        const name = part.replace(/\.\.\./g, '').replace(/=[^,]*/g, '').trim()
-        if (name) names.add(name)
-      })
-    } else if (match[2]) {
-      // object destructuring: const { name, price } = ...
-      match[2].split(',').forEach((part) => {
-        const name = part.replace(/\.\.\./g, '').trim()
-        if (name) names.add(name)
-      })
-    } else if (match[3]) {
-      names.add(match[3])
+  if (!trimmedMarkup) {
+    return buildPreviewShell(buildEmptyState())
+  }
+
+  if (hasFullDocument) {
+    return safeMarkup
+  }
+
+  return buildPreviewShell(safeMarkup)
+}
+
+export function renderPreview(frameEl, markup) {
+  if (!frameEl) return
+  frameEl.srcdoc = buildPreviewDocument(markup)
+}
+
+export function evaluateMissions(level, markup) {
+  const missions = Array.isArray(level?.missions) ? level.missions : []
+  if (missions.length === 0) return []
+
+  const documentMarkup = buildPreviewDocument(markup)
+  const document = new DOMParser().parseFromString(documentMarkup, 'text/html')
+  const safeMarkup = sanitizeMarkup(markup)
+
+  return missions.map((mission) => {
+    if (typeof mission?.validate !== 'function') {
+      return false
     }
-  }
 
-  // Also grab top-level assignments like `belt[0] = ...` — we need the array name
-  const assignments = /^(\w+)\[/gm
-  while ((match = assignments.exec(allCode)) !== null) {
-    names.add(match[1])
-  }
-
-  // Also grab standalone method calls like `belt.sort()`
-  const methodCalls = /^(\w+)\.\w+\(/gm
-  while ((match = methodCalls.exec(allCode)) !== null) {
-    names.add(match[1])
-  }
-
-  // Grab bare reassignments like `[a, b] = [b, a]`
-  const bareDestructure = /^(?!\s*(?:const|let|var)\s)\s*\[([^\]]+)\]\s*=/gm
-  while ((match = bareDestructure.exec(allCode)) !== null) {
-    match[1].split(',').forEach((part) => {
-      const name = part.replace(/\.\.\./g, '').trim()
-      if (name) names.add(name)
-    })
-  }
-
-  return [...names]
+    try {
+      return Boolean(mission.validate({ document, markup: safeMarkup }))
+    } catch {
+      return false
+    }
+  })
 }

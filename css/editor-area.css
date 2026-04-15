@@ -29,6 +29,7 @@
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  min-height: 0;
 }
 
 /* Custom editor */
@@ -44,6 +45,7 @@
   cursor: text;
   position: relative;
   height: 228px;
+  overflow: hidden;
 }
 
 .custom-editor::before {
@@ -85,30 +87,37 @@
   box-shadow: -20px 0 0 0 #171c1c;
 }
 
-.editor-line.editable {
-  background: rgba(255, 255, 255, 0.04);
-}
-
-.editor-line.editable .line-num {
-  color: #cdd6f4;
-}
-
-.editor-line.empty .line-num {
-  color: #3a3f4a;
-}
-
 .line-text {
   color: #AEB9B5;
   white-space: pre-wrap;
 }
 
-.locked-prefix {
-  color: #AEB9B5;
-  white-space: pre;
+.editor-edit-block {
+  display: grid;
+  grid-template-columns: 45px minmax(0, 1fr);
+  flex: 1;
+  min-height: 0;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.editor-edit-gutter {
+  overflow: hidden;
+  background: #171c1c;
+  box-shadow: -20px 0 0 0 #171c1c;
+}
+
+.editor-edit-gutter .line-num {
+  width: auto;
+  margin-left: 0;
+  margin-right: 0;
+  padding-right: 10px;
+  box-shadow: none;
+  color: #cdd6f4;
 }
 
 .code-input {
-  flex: 1;
+  width: 100%;
+  height: 100%;
   background: transparent;
   border: none;
   outline: none;
@@ -116,11 +125,15 @@
   font-family: inherit;
   font-size: inherit;
   line-height: inherit;
-  padding: 0;
+  padding: 0 16px 0 0;
   caret-color: #f5e0dc;
+  resize: none;
+  overflow: auto;
+  white-space: pre;
 }
 
 #editor-container {
+  flex: 1;
   overflow: hidden;
   position: relative;
 }
@@ -150,6 +163,10 @@
 .editor-toast.error {
   background: var(--red);
   color: var(--white);
+}
+
+.editor-toast.info {
+  background: var(--yellow);
 }
 
 @keyframes toast-in {

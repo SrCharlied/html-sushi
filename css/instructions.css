@@ -26,9 +26,23 @@
 }
 
 .instructions-body {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding-right: 8px;
   font-size: 1rem;
   line-height: 1.7;
   color: var(--content-text);
+}
+
+.instructions-body ul,
+.instructions-body ol {
+  padding-left: 24px;
+  margin: 10px 0;
+}
+
+.instructions-body li + li {
+  margin-top: 6px;
 }
 
 .instructions-body code {
@@ -49,10 +63,18 @@
   align-self: center;
   position: relative;
   width: 100%;
-  flex-grow: 1;
   display: flex;
   justify-content: center;
   align-items: flex-end;
+  margin-top: auto;
+  padding-top: 8px;
+}
+
+.hint-actions {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
 }
 
 .hint-btn {
@@ -83,6 +105,10 @@
   background: var(--green);
   padding: 8px 18px 10px 18px;
   font-size: 1.05rem;
+}
+
+.mission-btn {
+  background: #cfe7d1;
 }
 
 .hint-btn.next-lesson-btn:active {
@@ -137,4 +163,50 @@
 .hint-modal > * {
   position: relative;
   z-index: 1;
+}
+
+.missions-modal {
+  width: 340px;
+}
+
+.missions-title {
+  margin: 0 0 10px;
+  font-size: 1.1rem;
+  font-weight: 900;
+}
+
+.missions-list {
+  margin: 0;
+  padding-left: 22px;
+}
+
+.missions-list li + li {
+  margin-top: 8px;
+}
+
+.missions-list li {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+}
+
+.mission-status {
+  display: inline-flex;
+  flex-shrink: 0;
+  min-width: 78px;
+  justify-content: center;
+  padding: 3px 8px;
+  border: 2px solid var(--content-text);
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 800;
+  line-height: 1.2;
+}
+
+.mission-done .mission-status {
+  background: var(--green);
+}
+
+.mission-pending .mission-status {
+  background: #f3d7ab;
 }

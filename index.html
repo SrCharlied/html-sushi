@@ -1,100 +1,26 @@
 <!DOCTYPE html>
-<html lang="en" prefix="og: https://ogp.me/ns#">
+<html lang="es" prefix="og: https://ogp.me/ns#">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>JS Sushi — Learn JavaScript Arrays Through an Interactive Sushi Belt Game</title>
-  <meta name="description" content="Learn JavaScript array methods by writing real code that controls a visual sushi conveyor belt. 40 interactive levels covering push, pop, map, filter, reduce, spread, destructuring and more.">
-  <meta name="keywords" content="JavaScript, learn JavaScript, JavaScript arrays, array methods, interactive coding, coding game, sushi belt, push, pop, map, filter, reduce, spread operator, destructuring, beginner JavaScript, learn to code">
-  <meta name="author" content="JS Sushi">
+  <title>HTML Sushi - Aprende HTML Basico con un Juego de Sushi</title>
+  <meta name="description" content="Aprende HTML basico con 3 lecciones interactivas inspiradas en sushi. Practica etiquetas, estructura y formularios con vista previa en vivo.">
+  <meta name="keywords" content="HTML, HTML5, aprender HTML, etiquetas HTML, formularios HTML, vista previa HTML, juego educativo, sushi">
+  <meta name="author" content="HTML Sushi">
   <meta name="robots" content="index, follow">
   <meta name="theme-color" content="#1e1e2e">
-  <link rel="canonical" href="https://denn1s.github.io/js-sushi/">
 
-  <!-- Open Graph / Facebook -->
-  <meta property="og:type" content="website">
-  <meta property="og:url" content="https://denn1s.github.io/js-sushi/">
-  <meta property="og:title" content="JS Sushi — Learn JavaScript Arrays Through an Interactive Sushi Belt Game">
-  <meta property="og:description" content="Write real JavaScript to manipulate a visual sushi conveyor belt. 40 levels covering arrays from basics to advanced patterns like map, filter, reduce, spread, and destructuring.">
-  <meta property="og:image" content="https://denn1s.github.io/js-sushi/favicon/android-chrome-512x512.png">
-  <meta property="og:image:width" content="512">
-  <meta property="og:image:height" content="512">
-  <meta property="og:image:alt" content="JS Sushi mascot — a friendly sushi character">
-  <meta property="og:site_name" content="JS Sushi">
-  <meta property="og:locale" content="en_US">
-
-  <!-- Twitter Card -->
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="JS Sushi — Learn JavaScript Arrays Through an Interactive Sushi Belt Game">
-  <meta name="twitter:description" content="Write real JavaScript to manipulate a visual sushi conveyor belt. 40 levels covering arrays from basics to advanced patterns.">
-  <meta name="twitter:image" content="https://denn1s.github.io/js-sushi/favicon/android-chrome-512x512.png">
-  <meta name="twitter:image:alt" content="JS Sushi mascot — a friendly sushi character">
-
-  <!-- Structured Data -->
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "WebApplication",
-    "name": "JS Sushi",
-    "url": "https://denn1s.github.io/js-sushi/",
-    "description": "An interactive browser game that teaches JavaScript array methods through a sushi conveyor belt metaphor. 40 levels across 7 chapters.",
-    "applicationCategory": "EducationalApplication",
-    "operatingSystem": "Any",
-    "browserRequirements": "Requires a modern browser with ES module support",
-    "offers": {
-      "@type": "Offer",
-      "price": "0",
-      "priceCurrency": "USD"
-    },
-    "author": {
-      "@type": "Organization",
-      "name": "JS Sushi"
-    },
-    "image": "https://denn1s.github.io/js-sushi/favicon/android-chrome-512x512.png",
-    "screenshot": "https://denn1s.github.io/js-sushi/favicon/android-chrome-512x512.png",
-    "educationalLevel": "Beginner",
-    "learningResourceType": "Interactive game",
-    "teaches": "JavaScript array methods",
-    "inLanguage": "en",
-    "isAccessibleForFree": true
-  }
-  </script>
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "Course",
-    "name": "Learn JavaScript Arrays with JS Sushi",
-    "description": "Master JavaScript array methods through 40 interactive levels. Topics include array creation, push, pop, splice, slice, map, filter, reduce, spread operator, and destructuring.",
-    "provider": {
-      "@type": "Organization",
-      "name": "JS Sushi"
-    },
-    "isAccessibleForFree": true,
-    "educationalLevel": "Beginner",
-    "inLanguage": "en",
-    "numberOfCredits": 0,
-    "hasCourseInstance": {
-      "@type": "CourseInstance",
-      "courseMode": "Online",
-      "courseWorkload": "PT2H"
-    }
-  }
-  </script>
-
-  <!-- Favicons -->
   <link rel="icon" type="image/x-icon" href="favicon/favicon.ico">
   <link rel="icon" type="image/png" sizes="32x32" href="favicon/favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="favicon/favicon-16x16.png">
   <link rel="apple-touch-icon" sizes="180x180" href="favicon/apple-touch-icon.png">
   <link rel="manifest" href="favicon/site.webmanifest">
 
-  <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/variables.css">
   <link rel="stylesheet" href="css/style.css">
-  <link rel="stylesheet" href="css/belt.css">
   <link rel="stylesheet" href="css/wood-grain.css">
   <link rel="stylesheet" href="css/bento.css">
   <link rel="stylesheet" href="css/title.css">
@@ -102,8 +28,6 @@
   <link rel="stylesheet" href="css/editor-area.css">
 </head>
 <body>
-
-  <!-- SVG filter for wood grain texture — remove with css/wood-grain.css -->
   <svg width="0" height="0" style="position:absolute">
     <filter id="wood-grain">
       <feTurbulence
@@ -120,51 +44,62 @@
   <main class="bento">
     <div class="bento-card title-area">
       <div class="title-left">
-        <img class="mascot" src="svg/mascot.svg" alt="Sushi mascot">
-        <h1 class="game-title"><span class="title-js">JS</span> <span class="title-sushi">Sushi</span></h1>
+        <img class="mascot" src="svg/mascot.svg" alt="Mascota sushi">
+        <h1 class="game-title"><span class="title-js">HTML</span> <span class="title-sushi">Sushi</span></h1>
       </div>
       <div class="title-right">
         <button class="level-dropdown" id="level-dropdown">
-          Level <span id="current-level">1</span> of <span id="total-levels">40</span>
+          Leccion <span id="current-level">1</span> de <span id="total-levels">3</span>
           <span class="dropdown-arrow">&#9662;</span>
         </button>
         <div class="level-modal-overlay hidden" id="level-modal-overlay"></div>
         <div class="level-modal hidden" id="level-modal">
-          <div class="level-modal-title">Select Level</div>
+          <div class="level-modal-title">Selecciona una leccion</div>
           <div class="level-grid" id="level-grid"></div>
         </div>
         <div class="nav-arrows">
-          <button class="arrow-btn arrow-left" id="prev-btn">
+          <button class="arrow-btn arrow-left" id="prev-btn" aria-label="Leccion anterior">
             <span class="arrow-icon">&lsaquo;</span>
           </button>
-          <button class="arrow-btn arrow-right" id="next-btn">
+          <button class="arrow-btn arrow-right" id="next-btn" aria-label="Siguiente leccion">
             <span class="arrow-icon">&rsaquo;</span>
           </button>
         </div>
       </div>
     </div>
+
     <div class="bento-card instructions-area">
       <div class="instructions-header">
-        <h2 class="instructions-title" id="level-title">1. Your First Belt</h2>
-        <p class="instructions-subtitle" id="level-subtitle">Array literal syntax</p>
+        <h2 class="instructions-title" id="level-title">1. Etiquetas Basicas de HTML5</h2>
+        <p class="instructions-subtitle" id="level-subtitle">Definicion y uso simple</p>
       </div>
       <div class="instructions-body" id="level-description">
-        <p>Create your first sushi belt by writing an array with <code>'salmon'</code> inside it.</p>
+        <p>Explora etiquetas basicas de HTML5 y mira el resultado en la vista previa.</p>
       </div>
       <div class="hint-wrapper">
-        <button class="hint-btn" id="hint-btn">
-          <img class="hint-icon" src="svg/light.svg" alt="">
-          <span>Show Hint</span>
-        </button>
+        <div class="hint-actions">
+          <button class="hint-btn" id="hint-btn">
+            <img class="hint-icon" src="svg/light.svg" alt="">
+            <span>Ver pista</span>
+          </button>
+          <button class="hint-btn mission-btn hidden" id="missions-btn">
+            <span>Misiones</span>
+          </button>
+        </div>
         <div class="hint-modal-overlay hidden" id="hint-modal-overlay"></div>
         <div class="hint-modal hidden" id="hint-modal">
-          <p id="level-hint">Use square brackets to create an array.</p>
+          <p id="level-hint">Cambia el titulo, los colores y los textos para ver como responde el HTML.</p>
+        </div>
+        <div class="hint-modal-overlay hidden" id="missions-modal-overlay"></div>
+        <div class="hint-modal missions-modal hidden" id="missions-modal">
+          <div id="missions-list"></div>
         </div>
       </div>
     </div>
+
     <div class="bento-card editor-area">
       <div class="editor-topbar">
-        <span class="editor-topbar-title">Code Editor</span>
+        <span class="editor-topbar-title">Editor HTML</span>
       </div>
       <div class="editor-content">
         <div class="editor-body">
@@ -172,19 +107,26 @@
         </div>
         <div class="editor-run">
           <button class="run-btn" id="run-btn">
-          Run
-          <svg class="play-icon" viewBox="0 0 24 24" fill="var(--content-text)">
-            <path d="M6 4.5c0-1.2 1.3-1.9 2.3-1.2l11.1 7.5c.9.6.9 1.8 0 2.4L8.3 20.7C7.3 21.4 6 20.7 6 19.5z"/>
-          </svg>
-        </button>
+            Preview
+            <svg class="play-icon" viewBox="0 0 24 24" fill="var(--content-text)">
+              <path d="M6 4.5c0-1.2 1.3-1.9 2.3-1.2l11.1 7.5c.9.6.9 1.8 0 2.4L8.3 20.7C7.3 21.4 6 20.7 6 19.5z"/>
+            </svg>
+          </button>
         </div>
       </div>
     </div>
-    <div class="bento-card sushi-area">
-      <div class="belt-container" id="belt-display"></div>
-      <div class="belt-container second-belt hidden" id="belt-display-2"></div>
-      <div class="plate-container hidden" id="plate-display"></div>
-      <div class="table-wall hidden"></div>
+
+    <div class="bento-card sushi-area preview-area">
+      <div class="preview-header">
+        <span class="preview-title">Vista previa</span>
+      </div>
+      <iframe
+        class="preview-frame"
+        id="preview-frame"
+        title="Vista previa HTML"
+        sandbox=""
+        referrerpolicy="no-referrer"
+      ></iframe>
     </div>
   </main>
 
