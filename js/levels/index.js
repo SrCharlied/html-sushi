@@ -66,7 +66,7 @@ const levels = [
       <p>Hoy vamos a construir una tarjeta de sushi usando etiquetas basicas de HTML5.</p>
       <p>En esta leccion vas a ver y practicar:</p>
       <ul>
-        <li>Etiquetas basicas como <code>&lt;h1&gt;</code>, <code>&lt;p&gt;</code> y <code>&lt;div&gt;</code>.</li>
+        <li>Etiquetas basicas de texto como <code>&lt;h1&gt; a &lt;h6&gt; </code>, <code>&lt;p&gt;</code> y <code>&lt;div&gt;</code>.</li>
         <li>Formato de texto con <code>&lt;strong&gt;</code>, <code>&lt;em&gt;</code> y <code>&lt;mark&gt;</code>.</li>
         <li>Imagenes con <code>&lt;img&gt;</code>.</li>
         <li>Audio con <code>&lt;audio&gt;</code>.</li>
