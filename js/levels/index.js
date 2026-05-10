@@ -60,24 +60,25 @@ function findLabelOrField(document, text) {
 
 const levels = [
   {
-    title: 'Etiquetas Basicas de HTML5',
-    subtitle: 'Definicion y uso simple',
+    title: 'Etiquetas Básicas de HTML5',
+    subtitle: 'Definición y uso simple',
     description: `
-      <p>Hoy vamos a construir una tarjeta de sushi usando etiquetas basicas de HTML5.</p>
-      <p>En esta leccion vas a ver y practicar:</p>
+      <p>Hoy vamos a construir una tarjeta de sushi usando etiquetas básicas de HTML5.</p>
+      <p>En esta lección vas a ver y practicar:</p>
       <ul>
-        li>Etiquetas basicas como <code>&lt;h1&gt;</code>, <code>&lt;p&gt;</code> y <code>&lt;div&gt;</code>.</li>
-        <li>Formato de texto con <code>&lt;strong&gt;</code>, <code>&lt;em&gt;</code> y <code>&lt;mark&gt;</code>.</li>
-        <li>Imagenes con <code>&lt;img&gt;</code>.</li>
+        <li>Etiquetas básicas de texto  <code>&lt;h1&gt;  </code> a <code>&lt;h6&gt;  </code>  para títulos, <code>&lt;p&gt;</code>
+         para parrafos, <code>&lt;br&gt;</code> para saltos de línea, <code>&lt;strong&gt;</code> para negrita, <code>&lt;em&gt;</code>
+          para cursiva y <code>&lt;u&gt;</code>  para subrayar. </li>
         <li>Audio con <code>&lt;audio&gt;</code>.</li>
         <li>Video con <code>&lt;video&gt;</code>.</li>
-        <li>Colores usando el atributo <code>style</code>.</li>
+        <li>Imágenes con <code>&lt;img&gt;</code>.</li>
+        <li>Colores usando el atributo <code>style="color:red;"</code> .</li>
       </ul>
-      <p>Prueba cambiar los textos, colores y tamanos para personalizar tu mini restaurante de sushi.</p>
+      <p>Prueba cambiar los textos, colores y tamaños para personalizar tu mini restaurante de sushi.</p>
     `,
-    hint: 'Empieza por cambiar el titulo, luego modifica colores y por ultimo prueba a agregar otro parrafo o una segunda imagen.',
+    hint: 'Empieza por cambiar el título, luego modifica colores y por último prueba a agregar otro párrafo o una segunda imagen.',
     missions: [
-      mission('Quita la negrita de la palabra Salmon.', ({ document }) => {
+      mission('Quita la negrita de la palabra Salmón.', ({ document }) => {
         const hasSalmonText = textIncludes(document.body.textContent, 'salmon')
         const salmonInStrong = Array.from(document.querySelectorAll('strong')).some((element) => {
           return textIncludes(element.textContent, 'salmon')
@@ -98,7 +99,7 @@ const levels = [
         const titleColor = styleValue(title, 'color')
         return Boolean(titleColor) && !styleMatchesTitleDefault(titleColor)
       }),
-      mission('Haz mas grande la caja amarilla o cambiale el color de fondo.', ({ document }) => {
+      mission('Haz mas grande el cuadro amarillo o cambiale el color de fondo.', ({ document }) => {
         return Array.from(document.querySelectorAll('div')).some((element) => {
           const width = numberFromStyle(styleValue(element, 'width'))
           const height = numberFromStyle(styleValue(element, 'height'))
@@ -128,7 +129,7 @@ const levels = [
   <video controls width="260"></video>
 
   <h2>Colores</h2>
-  <p style="color: #2563eb;">Este texto es azul.</p>
+  <p style="color: blue;">Este texto es azul.</p>
   <div style="width: 160px; height: 70px; border-radius: 16px; background: #f7c94c;"></div>
 </section>`,
   },
