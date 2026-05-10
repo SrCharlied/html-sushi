@@ -94,7 +94,7 @@ const levels = [
         const target = findElementByText(document, 'p, span, div', 'Este texto es azul')
         return styleMatchesGreen(styleValue(target, 'color'))
       }),
-      mission('Cambia el color del titulo "Mi barra de sushi".', ({ document }) => {
+      mission('Cambia el color del título "Mi barra de sushi".', ({ document }) => {
         const title = findElementByText(document, 'h1, h2, h3', 'Mi barra de sushi')
         const titleColor = styleValue(title, 'color')
         return Boolean(titleColor) && !styleMatchesTitleDefault(titleColor)
